@@ -9,6 +9,18 @@ router.get('/', async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+router.get('/order/:orderId', async (req, res) => {
+    try {
+        const rows = await db.query(`
+            SELECT Ordered_items.*, Products.name as product_name, Products.price as default_price
+            FROM Ordered_items
+            LEFT JOIN Products ON Ordered_items.product_id = Products.id
+            WHERE Ordered_items.order_id = ?
+        `, [req.params.orderId]);
+        res.json(rows);
+    } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 router.get('/:id', async (req, res) => {
     try {
         const rows = await db.query('SELECT * FROM Ordered_items WHERE id = ?', [req.params.id]);
@@ -18,13 +30,13 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { id, special_request, order_id, serving_status, quantity, current_price, course_number, product_id } = req.body;
+    const { special_request, order_id, serving_status, quantity, current_price, course_number, product_id } = req.body;
     try {
         const result = await db.query(
-            'INSERT INTO Ordered_items (id, special_request, order_id, serving_status, quantity, current_price, course_number, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [id, special_request, order_id, serving_status, quantity, current_price, course_number, product_id]
+            'INSERT INTO Ordered_items (special_request, order_id, serving_status, quantity, current_price, course_number, product_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [special_request || null, order_id, serving_status, quantity, current_price, course_number || null, product_id]
         );
-        res.status(201).json({ message: 'Created successfully', result });
+        res.status(201).json({ message: 'Created successfully', itemId: Number(result.insertId), result });
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

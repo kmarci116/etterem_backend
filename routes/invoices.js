@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
             'INSERT INTO Invoices (total_paid, base_amount, tip, total_amount, billing_details, order_id, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [total_paid, base_amount, tip, total_amount, billing_details, order_id, payment_method]
         );
-        res.status(201).json({ message: 'Created successfully', result });
+        res.status(201).json({ message: 'Created successfully', invoiceId: Number(result.insertId), result });
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 

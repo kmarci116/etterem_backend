@@ -11,6 +11,8 @@ const orderRoutes = require('./routes/orders');
 const orderedItemRoutes = require('./routes/ordereditems');
 const wineRoutes = require('./routes/wines');
 const winePairingRoutes = require('./routes/winePairings');
+const authRoutes = require('./routes/auth');
+const deskRoutes = require('./routes/desks');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
@@ -37,6 +39,8 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/ordered-items', orderedItemRoutes);
 app.use('/api/wines', wineRoutes);
 app.use('/api/wine-pairings', winePairingRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/desks', deskRoutes);
 
 app.listen(PORT, async () => {
     console.log("A szerver fut a " + PORT + "-es porton.")
